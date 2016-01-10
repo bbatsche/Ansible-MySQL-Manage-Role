@@ -3,9 +3,11 @@
   remote_user: root
   become: yes
 
-  vars_files:
-    - defaults/main.yml
+  vars:
+    new_mysql_user: test_user
+    new_mysql_pass: password
+
+  roles:
+    - bbatsche.MySQL-Install
   tasks:
     - include: tasks/main.yml
-  handlers:
-    - include: handlers/main.yml

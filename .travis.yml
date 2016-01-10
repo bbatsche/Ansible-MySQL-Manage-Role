@@ -4,11 +4,16 @@ dist: trusty
 
 language: generic
 
+env:
+  - DB_NAME=""
+  - DB_NAME=test_db
+
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq python-apt python-pycurl
 install:
   - sudo pip install "ansible>=1.9"
+  - sudo ansible-galaxy install bbatsche.MySQL-Install
 script:
   - echo localhost > inventory
 
@@ -16,11 +21,11 @@ script:
   - ansible-playbook -i inventory travis-playbook.yml --syntax-check
 
   # Play test
-  - ansible-playbook -i inventory travis-playbook.yml --connection=local
+  - ansible-playbook -i inventory travis-playbook.yml --connection=local -e "db_name=$DB_NAME"
 
   # Idempotence test
   - >
-    ansible-playbook -i inventory travis-playbook.yml --connection=local
+    ansible-playbook -i inventory travis-playbook.yml --connection=local -e "db_name=$DB_NAME"
     | grep -q 'changed=0.*failed=0'
     && (echo 'Idempotence test: pass' && exit 0)
     || (echo 'Idempotence test: fail' && exit 1)
