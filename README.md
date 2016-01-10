@@ -1,32 +1,39 @@
-Role Name
-=========
+Ansible Manage MySQL Role
+=========================
 
-A brief description of the role goes here.
-
-Requirements
-------------
-
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+This role will either create a MySQL administrator or a MySQL database and DB owner.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+- `mysql_admin` &mdash; MySQL admin username. Default "vagrant"
+- `mysql_pass` &mdash; Password for MySQL admin user. Default "vagrant"
+- `new_mysql_user` &mdash; New MySQL user to be created
+- `new_mysql_pass` &mdash; Password for new MySQL user
+- `db_name` &mdash; Optional name of database to be created. If included, user will be granted privileges for that DB only. Otherwise, privileges will be granted for the entire server.
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+This role depends on `bbatsche.MySQL-Install`. You must install that role first using:
+
+```bash
+ansible-galaxy install bbatsche.MySQL-Install
+```
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+```yml
+- hosts: servers
+  roles:
+     - { role: bbatsche.MySQL-Manage, new_mysql_user: root_user, new_mysql_pass: securePassword }
+```
 
 ```yml
 - hosts: servers
   roles:
-     - { role: bbatsche.rolename, x: 42 }
+     - { role: bbatsche.MySQL-Manage, new_mysql_user: db_owner, new_mysql_pass: securePassword, db_name: new_db }
 ```
 
 License
@@ -61,8 +68,3 @@ There are several rake tasks for interacting with the test environment, includin
 - `rake vagrant[cmd]` &mdash; Run some arbitrary Vagrant command in the test environment. For example, to log in to the test environment run: `rake vagrant[ssh]`
 
 These specs are **not** meant to test for idempotence. They are meant to check that the specified tasks perform their expected steps. Idempotency can be tested independently as a form of integration testing.
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
