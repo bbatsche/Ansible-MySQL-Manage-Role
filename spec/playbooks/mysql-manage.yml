@@ -1,0 +1,6 @@
+---
+- hosts: all
+  roles:
+    - bbatsche.MySQL-Install
+  tasks:
+    - include: ../../tasks/main.yml
