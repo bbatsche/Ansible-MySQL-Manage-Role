@@ -14,5 +14,5 @@
     password:       "{{ new_mysql_pass }}"
     login_user:     "{{ mysql_admin }}"
     login_password: "{{ mysql_pass }}"
-    priv:           "{{ db_name + '.*:ALL' if db_name|default(None) != None else '*.*:ALL,GRANT' }}"
+    priv:           "{{ db_name + '.*:ALL' if db_name|default('') != '' else '*.*:ALL,GRANT' }}"
     state:          present
