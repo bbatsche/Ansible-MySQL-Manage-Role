@@ -2,6 +2,7 @@ Ansible Manage MySQL Role
 =========================
 
 [![Build Status](https://travis-ci.org/bbatsche/Ansible-MySQL-Manage-Role.svg?branch=master)](https://travis-ci.org/bbatsche/Ansible-MySQL-Manage-Role)
+[![Ansible Galaxy](https://img.shields.io/ansible/role/6946.svg)](https://galaxy.ansible.com/detail#/role/6946)
 
 This role will either create a MySQL administrator or a MySQL database and DB owner.
 
