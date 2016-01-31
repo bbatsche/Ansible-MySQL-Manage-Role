@@ -1,10 +1,11 @@
-require_relative 'spec_helper'
+require_relative "lib/ansible_helper"
+require_relative "bootstrap"
 
 RSpec.configure do |config|
   config.before :suite do
-    SpecHelper.instance.provision('playbooks/mysql-manage.yml', {
-      new_mysql_user:  "root_user",
-      new_mysql_pass:  "root_password"
+    AnsibleHelper.instance.playbook("playbooks/mysql-manage.yml", {
+      new_mysql_user: "root_user",
+      new_mysql_pass: "root_password"
     })
   end
 end
