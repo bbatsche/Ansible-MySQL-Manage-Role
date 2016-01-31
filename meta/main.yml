@@ -8,8 +8,9 @@ galaxy_info:
   - name: Ubuntu
     versions:
     - trusty
-  categories:
+  galaxy_tags:
   - database
-  - "database:sql"
+  - sql
+  - mysql
 dependencies:
   - bbatsche.MySQL-Install
