@@ -5,8 +5,8 @@ RSpec.configure do |config|
   config.before :suite do
     AnsibleHelper.instance.playbook("playbooks/mysql-manage.yml", {
       db_name:        "test_db",
-      new_mysql_user: "test_db_owner",
-      new_mysql_pass: "db_password"
+      new_db_user: "test_db_owner",
+      new_db_pass: "db_password"
     })
   end
 end

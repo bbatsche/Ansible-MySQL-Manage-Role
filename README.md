@@ -9,10 +9,10 @@ This role will either create a MySQL administrator or a MySQL database and DB ow
 Role Variables
 --------------
 
-- `mysql_admin` &mdash; MySQL admin username. Default "vagrant"
-- `mysql_pass` &mdash; Password for MySQL admin user. Default "vagrant"
-- `new_mysql_user` &mdash; New MySQL user to be created
-- `new_mysql_pass` &mdash; Password for new MySQL user
+- `db_admin` &mdash; MySQL admin username. Default "vagrant"
+- `db_pass` &mdash; Password for MySQL admin user. Default "vagrant"
+- `new_db_user` &mdash; New MySQL user to be created
+- `new_db_pass` &mdash; Password for new MySQL user
 - `db_name` &mdash; Optional name of database to be created. If included, user will be granted privileges for that DB only. Otherwise, privileges will be granted for the entire server.
 
 Dependencies
@@ -30,13 +30,13 @@ Example Playbook
 ```yml
 - hosts: servers
   roles:
-     - { role: bbatsche.MySQL-Manage, new_mysql_user: root_user, new_mysql_pass: securePassword }
+     - { role: bbatsche.MySQL-Manage, new_db_user: root_user, new_db_pass: securePassword }
 ```
 
 ```yml
 - hosts: servers
   roles:
-     - { role: bbatsche.MySQL-Manage, new_mysql_user: db_owner, new_mysql_pass: securePassword, db_name: new_db }
+     - { role: bbatsche.MySQL-Manage, new_db_user: db_owner, new_db_pass: securePassword, db_name: new_db }
 ```
 
 License

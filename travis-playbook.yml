@@ -4,8 +4,8 @@
   become: yes
 
   vars:
-    new_mysql_user: test_user
-    new_mysql_pass: password
+    new_db_user: test_user
+    new_db_pass: password
 
   roles:
     - bbatsche.MySQL-Install

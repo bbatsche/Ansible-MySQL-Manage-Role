@@ -4,8 +4,8 @@ require_relative "bootstrap"
 RSpec.configure do |config|
   config.before :suite do
     AnsibleHelper.instance.playbook("playbooks/mysql-manage.yml", {
-      new_mysql_user: "root_user",
-      new_mysql_pass: "root_password"
+      new_db_user: "root_user",
+      new_db_pass: "root_password"
     })
   end
 end
