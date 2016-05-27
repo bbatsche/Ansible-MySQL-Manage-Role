@@ -5,32 +5,56 @@ dist: trusty
 language: generic
 
 env:
-  - ANSIBLE_VERSION="1.9" DB_NAME=""
-  - ANSIBLE_VERSION="2.0" DB_NAME=""
-  - ANSIBLE_VERSION="1.9" DB_NAME=test_db
-  - ANSIBLE_VERSION="2.0" DB_NAME=test_db
+  global:
+    - ANSIBLE_LOCAL_TEMP=/tmp/ansible
+    - ANSIBLE_REMOTE_TEMP=/tmp/ansible
+  matrix:
+    - ANSIBLE_VERSION="1.9"
+    - ANSIBLE_VERSION="2.0"
+    - ANSIBLE_VERSION="2.1"
+    - ANSIBLE_VERSION="1.9" DB_NAME=test_db
+    - ANSIBLE_VERSION="2.0" DB_NAME=test_db
+    - ANSIBLE_VERSION="2.1" DB_NAME=test_db
 
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq python-apt python-pycurl
+  - rvm use default
+  - sudo gem install bundler
 install:
-  - sudo pip install "ansible~=$ANSIBLE_VERSION"
-  - sudo ansible-galaxy install bbatsche.MySQL-Install
-script:
-  - echo localhost > inventory
+  - sudo -H pip install ansible==${ANSIBLE_VERSION}.*
 
+  - bundle install
+
+  - sudo ansible-galaxy install bbatsche.Base
+  - sudo ansible-galaxy install bbatsche.MySQL-Install
+
+  - echo localhost ansible_connection=local ansible_ssh_user=$USER > inventory
+
+  - ansible-playbook -i inventory provision-playbook.yml --skip-tags timezone,sysctl,apt,ruby,node,bash,swap
+before_script:
+  - "echo #!/bin/sh >> play.sh"
+  - echo "sudo -E su $USER -c 'ansible-playbook -i inventory travis-playbook.yml'" >> play.sh
+  - chmod +x play.sh
+
+  - "echo #!/bin/sh >> spec.sh"
+  - >
+    echo "sudo -E su -l $USER -c 'rvm use default; cd $TRAVIS_BUILD_DIR && rake spec'" >> spec.sh
+  - chmod +x spec.sh
+script:
   # Syntax check
   - ansible-playbook -i inventory travis-playbook.yml --syntax-check
 
   # Play test
-  - ansible-playbook -i inventory travis-playbook.yml --connection=local -e "db_name=$DB_NAME"
+  - travis_wait ./play.sh
 
   # Idempotence test
+  - ./play.sh > idempotence.out
   - >
-    ansible-playbook -i inventory travis-playbook.yml --connection=local -e "db_name=$DB_NAME"
-    | grep -q 'changed=0.*failed=0'
-    && (echo 'Idempotence test: pass' && exit 0)
-    || (echo 'Idempotence test: fail' && exit 1)
+    grep -q "changed=0.*failed=0" idempotence.out
+    && (echo "Idempotence test: pass" && exit 0) || (echo "Idempotence test: fail" && cat idempotence.out && exit 1)
 
+  # Serverspec
+  # - travis_wait ./spec.sh
 notifications:
     webhooks: https://galaxy.ansible.com/api/v1/notifications/

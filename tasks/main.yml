@@ -14,5 +14,5 @@
     password:       "{{ new_db_pass }}"
     login_user:     "{{ db_admin }}"
     login_password: "{{ db_pass }}"
-    priv:           "{{ db_name + '.*:ALL' if db_name|default('') != '' else '*.*:ALL,GRANT' }}"
+    priv:           "{{ db_name + '.*:ALL' if db_name is defined else '*.*:ALL,GRANT' }}"
     state:          present
