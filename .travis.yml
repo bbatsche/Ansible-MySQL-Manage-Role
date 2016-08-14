@@ -5,16 +5,12 @@ dist: trusty
 language: generic
 
 env:
-  global:
-    - ANSIBLE_LOCAL_TEMP=/tmp/ansible
-    - ANSIBLE_REMOTE_TEMP=/tmp/ansible
-  matrix:
-    - ANSIBLE_VERSION="1.9"
-    - ANSIBLE_VERSION="2.0"
-    - ANSIBLE_VERSION="2.1"
-    - ANSIBLE_VERSION="1.9" DB_NAME=test_db
-    - ANSIBLE_VERSION="2.0" DB_NAME=test_db
-    - ANSIBLE_VERSION="2.1" DB_NAME=test_db
+  - ANSIBLE_VERSION="1.9"
+  - ANSIBLE_VERSION="2.0"
+  - ANSIBLE_VERSION="2.1"
+  - ANSIBLE_VERSION="1.9" DB_NAME=test_db
+  - ANSIBLE_VERSION="2.0" DB_NAME=test_db
+  - ANSIBLE_VERSION="2.1" DB_NAME=test_db
 
 before_install:
   - sudo apt-get update -qq
@@ -30,6 +26,9 @@ install:
   - sudo ansible-galaxy install bbatsche.MySQL-Install
 
   - echo localhost ansible_connection=local ansible_ssh_user=$USER > inventory
+
+  - mkdir -p $HOME/.ansible
+  - sudo chown -R $USER:$USER $HOME/.ansible
 
   - ansible-playbook -i inventory provision-playbook.yml --skip-tags timezone,sysctl,apt,ruby,node,bash,swap
 before_script:
