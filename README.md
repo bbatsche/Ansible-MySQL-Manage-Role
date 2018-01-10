@@ -1,3 +1,7 @@
+# DEPRECATED!!
+
+## This role has been abandoned and its functionality replaced by [`bbatsche.MySQL`](https://github.com/bbatsche/Ansible-MySQL-Role). Please update your dependencies to use that role instead.
+
 Ansible Manage MySQL Role
 =========================
 
